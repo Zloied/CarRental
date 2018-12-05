@@ -1,0 +1,78 @@
+@CHARSET "UTF-8";
+
+
+input[type=data]{
+	width: 50%;
+}
+p.conf {
+	border-left: 12px solid red;
+	background-color: blue;
+}
+
+table {
+	border-spacing: 1;
+	border-collapse: collapse;
+	background: white;
+	border-radius: 6px;
+	overflow: hidden;
+	max-width: 800px;
+	width: 100%;
+	margin: 0 auto;
+	position: relative;
+}
+
+table tbody tr {
+	height: 48px;
+	border-bottom: 1px solid #E3F1D5;
+}
+
+table tbody tr:last-child {
+	border: 0;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+th {
+	background-color:  #ffb84d;
+	color: white;
+}
+
+form {
+	border-radius: 20px;
+	border: 1px solid #f2f2f2;
+	width : 400px;
+	height: auto;
+	padding: 20px;
+}
+
+form.inputs{
+	border: 0px solid #f2f2f2;
+	width : 800px;
+	height: auto;
+	padding: 20px;
+}
+.center {
+	margin: auto;
+	width: 60%;
+}
+
+
+.footer {
+	grid-area: footer;
+	background-color: #f1f1f1;
+	padding: 10px;
+	text-align: center;
+}
+
+.formBorderd {
+	border-radius: 20px;
+	border: 1px solid red;
+	padding: 300px;
+}
