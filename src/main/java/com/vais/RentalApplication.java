@@ -58,7 +58,7 @@ public class RentalApplication {
 	 * This method create Hibernate SessionFactory based on incoming dataSource
 	 * @param dataSource  requires to configure sessionFactory 
 	 * @return Hibernate SessionFactory
-	 * @throws Exception
+	 * @throws Exception if pointed property doesn't exist
 	 */
 	@Autowired
 	@Bean(name = "sessionFactory")
@@ -66,8 +66,9 @@ public class RentalApplication {
 		Properties properties = new Properties();
 
 		// See: application.properties
-		properties.put("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect"));
+		properties.put("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect"));		
 		properties.put("hibernate.show_sql", env.getProperty("spring.jpa.show-sql"));
+		properties.put("hibernate.format_sql", env.getProperty("spring.jpa.properties.hibernate.format_sql"));
 		properties.put("current_session_context_class", //
 				env.getProperty("spring.jpa.properties.hibernate.current_session_context_class"));
 

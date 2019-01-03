@@ -10,8 +10,8 @@
 <link rel="stylesheet" href="css/bootstrap.css">
 <link rel="stylesheet" href="css/custom.css">
 <script src="js/jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
 <script src="js/validation.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <style type="text/css">
 body {
 	background-image: url("images/blur.jpg");
@@ -26,7 +26,7 @@ body {
 					class="glyphicon glyphicon-home"></span></a>
 			</div>
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="loginPage">Sign In</a></li>
+				<li class="active"><a href="login">Sign In</a></li>
 				<li><a href="registration">Sign_up</a></li>
 				<li><a href="about">About </a></li>
 				<li><a href="contacts">Contacts </a></li>
@@ -50,7 +50,7 @@ body {
 				</div>
 				<div class="form-group">
 					<label for="passw">Password</label> <br> <input
-						type="password" class="form-control" name="pasw"
+						type="password" class="form-control" name="passw"
 						placeholder="Password" maxlength="30">
 				</div>
 				<button type="submit" class="btn btn-primary" name="command"
@@ -59,6 +59,5 @@ body {
 
 		</form>
 	</div>
-
 </body>
 </html>

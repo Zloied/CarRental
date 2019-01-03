@@ -32,7 +32,8 @@ public class CarController {
 	 * on request connects to database and pulls out list of cars . Retrieved data
 	 * is exposed via spring model
 	 * 
-	 * @param model
+	 * @param model    spring Model that used to input parameters for client
+	 *                 response
 	 * @param modelMap required to check user access modifier
 	 * @return spring UI model with List of cars in it
 	 */
@@ -104,15 +105,16 @@ public class CarController {
 	}
 
 	/**
-	 * adds new car into database by calling method form hibernate data access
-	 * repository
+	 * adds new car into database by calling method from hibernate data access
+	 * repository and using parameters received from request
 	 * 
-	 * @param carName
-	 * @param mark
-	 * @param carClass
-	 * @param carCost
-	 * @param modelMap
-	 * @return redirect link
+	 * @param carName  model of car entity received from request
+	 * @param mark     of car entity received from request
+	 * @param carClass of car entity received from request
+	 * @param carCost  of car entity received from request
+	 * @param modelMap spring ModelMap class
+	 * @return redirect link to managerCars page or to home page if role doesn't
+	 *         match "manager"
 	 */
 	@RequestMapping(value = "/cars", method = RequestMethod.POST)
 	public String addCar(@RequestParam String carName, @RequestParam String mark, @RequestParam String carClass,
@@ -132,9 +134,10 @@ public class CarController {
 	/**
 	 * deletes defined car , access to delete a car has only manager
 	 * 
-	 * @param carId
-	 * @param modelMap
-	 * @return redirect link
+	 * @param carId    of car entity received from request
+	 * @param modelMap spring ModelMap class
+	 * @return redirect link to managerCars page or to home page if role doesn't
+	 *         match "manager"
 	 */
 	@RequestMapping(value = "/cars/delete/{carId}")
 	public String deleteCar(@PathVariable Long carId, ModelMap modelMap) {

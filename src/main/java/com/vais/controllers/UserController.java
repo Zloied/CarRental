@@ -31,12 +31,21 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
+	/**
+	 * check if user with such parameters exists in database. After that puts user's
+	 * data into session and redirects request to appropriate page.
+	 * 
+	 * @param model Spring ModelMap class used to put parameters into session 
+	 * @param login received from request
+	 * @param passw user's password received from request
+	 * @return redirection page
+	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String logIn(ModelMap model, @RequestParam String login, @RequestParam String pasw) {
+	public String logIn(ModelMap model, @RequestParam String login, @RequestParam String passw) {
 
-		User user = userRepository.validateUser(login, pasw);
+		User user = userRepository.validateUser(login, passw);
 		if (user == null) {
-			return "redirect:/loginPage";
+			return "redirect:/login";
 		}
 		model.put("userId", user.getId());
 		model.put("role", user.getRole());
@@ -55,7 +64,14 @@ public class UserController {
 		}
 
 	}
-
+	/**
+	 * adds new user with such as incoming parameters into the database, but only in case if user doesn't already exist. 
+	 * @param model Spring ModelMap class used to put and get parameters from session 
+	 * @param login received from request
+	 * @param password1 user's password received from request
+	 * @param email user's email received from request
+	 * @return redirection to appropriate page
+	 */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public String registration(ModelMap model, @RequestParam String login, @RequestParam String password1,
 			@RequestParam String email) {
@@ -86,7 +102,12 @@ public class UserController {
 		}
 
 	}
-
+	/**
+	 * reponses to request by retrieving from database and putting user entities into response
+	 * @param model used to put data into response 
+	 * @param modelMap Spring ModelMap class used to put and get parameters from session 
+	 * @return Spring model class with data
+	 */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public Model getUsers(Model model, ModelMap modelMap) {
 

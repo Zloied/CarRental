@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -24,7 +25,12 @@ public class Car implements Serializable {
 	private static final long serialVersionUID = -5175608523574439852L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "car_seq")
+	@SequenceGenerator(
+			name = "car_seq",
+			sequenceName = "car_rental.cars_id_seq",
+			allocationSize = 10
+			)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

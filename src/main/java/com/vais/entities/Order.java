@@ -14,11 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
  * 
- * @author Eduard this class is entity for Order from Database. This class has
+ * @author Eduard. This class is entity for Order from Database. This class has
  *         generated getters and setters for interaction with fields like id ,
  *         starting date, bill etc.
  *
@@ -32,7 +33,13 @@ public class Order implements Serializable {
 	private static final long serialVersionUID = 2159650216587665394L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="order_seq")
+	@SequenceGenerator(
+			name="order_seq",
+			sequenceName="car_rental.orders_id_seq",
+			allocationSize=10,
+			initialValue=7 
+			)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

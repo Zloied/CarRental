@@ -27,6 +27,8 @@ body {
 				<li class="active"><a href="managerHome">Main_Page</a></li>
 				<li><a href="managerOrders">Manage_orders</a></li>
 				<li><a href="managerCars">Manage_cars</a></li>
+				<li class="active"><a href="managerCars">Manage_cars</a></li>
+				<li ><a href="managerCarsStat">Cars Statistic</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="logOut"><span class="glyphicon glyphicon-log-out"></span>

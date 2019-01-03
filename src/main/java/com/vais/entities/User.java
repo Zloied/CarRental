@@ -7,11 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+
 
 /**
  * 
- * @author Eduard , this class is entity for User from Database. This class has
+ * @author Eduard . This class is entity for User from Database. This class has
  *         generated getters and setters for interaction with fields like id ,
  *         name etc.
  *
@@ -23,7 +26,12 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -4062784936522642553L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="rental_seq" )
+	@SequenceGenerator( 
+			name="rental_seq",
+			sequenceName="car_rental.users_id_seq",
+			allocationSize=10
+			)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

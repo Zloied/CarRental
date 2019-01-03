@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.vais.entities.Car;
 import com.vais.entities.Order;
 import com.vais.entities.User;
+import com.vais.models.CarStatistic;
 import com.vais.repositories.CarRepository;
 import com.vais.repositories.OrderRepository;
 import com.vais.repositories.UserRepository;
@@ -103,6 +104,13 @@ public class AccessController {
 		}
 	}
 
+	@RequestMapping(value = "/manager/statistics")
+	public String goManagerStatistics(Model model) {
+
+		model.addAttribute("CARS_STAT", carRepository.getCarsStatistic());
+		return "managerStatistics";
+	}
+
 	@RequestMapping(value = "/managerCars")
 	public String goManagerCars(Model model, ModelMap modelMap) {
 
@@ -114,6 +122,20 @@ public class AccessController {
 		} else {
 			return "redirect:/home";
 		}
+	}
+
+	@RequestMapping(value = "/managerCarsStat")
+	public String goManagerCarsStatistic(Model model, ModelMap modelMap) {
+
+		String role = (String) modelMap.get("role");
+		if ("manager".equals(role)) {
+			List<CarStatistic> carsStat = carRepository.getCarsStatistic();
+			model.addAttribute("CARS_STAT", carsStat);
+			return "managerCarsStat";
+		} else {
+			return "redirect:/home";
+		}
+
 	}
 
 	@RequestMapping(value = "/managerCarChange")
@@ -143,7 +165,6 @@ public class AccessController {
 
 	@RequestMapping(value = "/userView")
 	public String userViewOrders(ModelMap modelMap, Model model) {
-
 		String role = (String) modelMap.get("role");
 
 		if ("user".equals(role)) {
