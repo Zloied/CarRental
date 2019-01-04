@@ -46,7 +46,7 @@ public class OrderController {
 	 * @param driver    is driver included into the order or not
 	 * @param startDate beginning of the order
 	 * @param endDate   and of the order
-	 * @return
+	 * @return appropriate redirect link 
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	@RequestMapping(value = "/orders", method = RequestMethod.POST)

@@ -46,7 +46,7 @@ public class OrderRepository {
 	 * this method updates status of certain order
 	 * 
 	 * @param id     identifier of entity to update
-	 * @param status
+	 * @param status entity's parameter that has to be updated
 	 */
 	@Transactional(propagation = Propagation.MANDATORY, rollbackFor = Exception.class)
 	public void updateOrderStatus(Long id, String status) {
