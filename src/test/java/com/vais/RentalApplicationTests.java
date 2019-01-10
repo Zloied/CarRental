@@ -64,7 +64,7 @@ public class RentalApplicationTests {
 		List<Car> list = carRepository.getCars();
 		list.forEach(str -> System.out.println(str));
 		carRepository.updatePrices(2);
-		list = carRepository.getCars();
+		list = carRepository.getCars();	
 		list.forEach(str -> System.out.println(str));
 
 	}
