@@ -144,7 +144,7 @@ public class UserRepository {
 	 * Retrieves paginated data as entities list of UserInfo representation class .
 	 * This method uses JPA Criteria IPA to construct query
 	 * 
-	 * @param offset number of record for one page
+	 * @param max number of record for one page
 	 * @param begin  starting point in the database
 	 * @return list of entities of UserInfo POJO representation class
 	 */
