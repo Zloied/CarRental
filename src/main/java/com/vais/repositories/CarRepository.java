@@ -2,6 +2,10 @@ package com.vais.repositories;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaUpdate;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -110,7 +114,18 @@ public class CarRepository {
 		Session session = this.sessionFactory.getCurrentSession();
 		session.update(Car.class.getName(), car);
 	}
-
+	
+	public void updatePrices(Integer coef) {
+		EntityManager session = this.sessionFactory.getCurrentSession();
+		
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+		CriteriaUpdate<Car> update = cb.createCriteriaUpdate(Car.class);
+		//Root<Car> root = update.from(Car.class);
+		update.set("cost", coef);
+		
+		session.createQuery(update).executeUpdate();
+	}
+	
 	/**
 	 * deletes car from database by incoming id
 	 * 

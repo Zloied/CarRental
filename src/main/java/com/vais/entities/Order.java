@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ConstructorResult;
+import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,7 +17,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+
+import com.vais.models.OrderStat;
 
 /**
  * 
@@ -26,6 +31,9 @@ import javax.persistence.Table;
  */
 
 @Entity
+@SqlResultSetMapping(name = "OrderStatMapping", classes = @ConstructorResult(targetClass = OrderStat.class, columns = {
+		@ColumnResult(name = "id", type = Long.class), @ColumnResult(name = "userId", type = Long.class),
+		@ColumnResult(name = "bill", type = Long.class) }))
 
 @Table(name = "car_rental.orders")
 public class Order implements Serializable {
@@ -33,13 +41,8 @@ public class Order implements Serializable {
 	private static final long serialVersionUID = 2159650216587665394L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="order_seq")
-	@SequenceGenerator(
-			name="order_seq",
-			sequenceName="car_rental.orders_id_seq",
-			allocationSize=10,
-			initialValue=7 
-			)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
+	@SequenceGenerator(name = "order_seq", sequenceName = "car_rental.orders_id_seq", allocationSize = 10, initialValue = 7)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

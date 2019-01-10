@@ -56,10 +56,8 @@ public class OrderController {
 		System.out.println("driver- " + driver + ", startDate -" + startDate + ", endDate- " + endDate + ", cars ");
 		List<Long> carsId = new ArrayList<Long>();
 		for (Long long1 : carId) {
-			System.out.println(long1);
 			carsId.add(long1);
 		}
-		System.out.println((Long) model.get("userId"));
 
 		Order order = new Order();
 		order.setDriver(driver);

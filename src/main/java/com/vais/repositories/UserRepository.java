@@ -131,24 +131,24 @@ public class UserRepository {
 	public List<UserInfo> getUsersInfo() {
 		List<UserInfo> usersInfo = null;
 
-		String uSql = "Select new " + UserInfo.class.getName() + "(u.id, u.name, u.email) " + " from "
+		String Sql = "Select new " + UserInfo.class.getName() + "(u.id, u.name, u.email) " + " from "
 				+ User.class.getName() + " u order by u.id";
-		Session session2 = this.sessionFactory.getCurrentSession();
-		Query<UserInfo> uQuery = session2.createQuery(uSql, UserInfo.class);
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<UserInfo> uQuery = session.createQuery(Sql, UserInfo.class);
 		usersInfo = uQuery.getResultList();
 
 		return usersInfo;
 	}
 
 	/**
-	 * Retrievs paginated data as entities list of UserInfo representation class .
+	 * Retrieves paginated data as entities list of UserInfo representation class .
 	 * This method uses JPA Criteria IPA to construct query
 	 * 
 	 * @param offset number of record for one page
 	 * @param begin  starting point in the database
 	 * @return list of entities of UserInfo POJO representation class
 	 */
-	public List<UserInfo> getPaginatedUInfo(int offset, int begin) {
+	public List<UserInfo> getPaginatedUInfo(int max, int begin) {
 		List<UserInfo> infoList = null;
 
 		// Building a criteria
@@ -157,11 +157,12 @@ public class UserRepository {
 		CriteriaQuery<UserInfo> q = criteria.createQuery(UserInfo.class);
 		Root<User> root = q.from(User.class);
 		q.select(criteria.construct(UserInfo.class, root.get("id"), root.get("name"), root.get("email")));
+		//q.select(criteria.construct(UserInfo.class, root.get(User_.id), root.get(User_.name), root.get(User_.email)));
 
 		// setting up pagination
 		TypedQuery<UserInfo> quer = session1.createQuery(q);
 		quer.setFirstResult(begin);
-		quer.setMaxResults(offset);
+		quer.setMaxResults(max);
 		infoList = quer.getResultList();
 
 		return infoList;

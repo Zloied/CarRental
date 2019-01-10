@@ -10,7 +10,7 @@
 	<packaging>jar</packaging>
 
 	<name>Rental</name>
-	<description>Car_rental projekt with spring boot and hibernate</description>
+	<description>Car_rental project with spring boot and hibernate</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -68,6 +68,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>

@@ -2,10 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<c:set var="theLocale"
-	value="${not empty param.theLocale ? param.theLocale : pageContext.request.locale }"
-	scope="session" />
-<fmt:setLocale value="${theLocale}" />
 <fmt:bundle basename="i18n.resources" />
 <html>
 <head>
@@ -84,7 +80,7 @@
 						<h1>Cars</h1>
 						<p class="lead">Everyone can get car he wants,so don't waste
 							the time and make an order.</p>
-						<a class="btn btn-lg btn-primary" href="loginPage">SignIn</a>
+						<a class="btn btn-lg btn-primary" href="login">SignIn</a>
 					</div>
 				</div>
 
