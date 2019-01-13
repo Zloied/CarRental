@@ -12,8 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vais.entities.Car;
-import com.vais.models.OrderStat;
+import com.vais.models.OrderInfo;
 import com.vais.models.UserInfo;
 import com.vais.repositories.CarRepository;
 import com.vais.repositories.OrderRepository;
@@ -28,7 +27,7 @@ public class RentalApplicationTests {
 	UserRepository userRepository;
 	@Autowired
 	CarRepository carRepository;
-	@Autowired 
+	@Autowired
 	OrderRepository orderRepository;
 
 	@Test
@@ -37,17 +36,15 @@ public class RentalApplicationTests {
 
 	@Test
 	@Transactional
-	public void checkOrderStats() {
-		//Mapping native query result to POJO model class 
+	public void checkOrderInfos() {
+		// Mapping native query result to POJO model class
 		String sql = "Select id, userId, bill FROM car_rental.orders ";
 		Session session = this.sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
 
-		Query<OrderStat> query = session.createNativeQuery(sql, "OrderStatMapping");
-		List<OrderStat> stats = query.getResultList();
-		for (OrderStat orderStat : stats) {
-			System.out.println(orderStat.toString());
-		}
+		Query<OrderInfo> query = session.createNativeQuery(sql, "OrderInfoMapping");
+		List<OrderInfo> stats = query.getResultList();
+		stats.forEach(st -> System.out.println(st));
 	}
 
 	@Test
@@ -61,17 +58,21 @@ public class RentalApplicationTests {
 
 	@Test
 	public void checkPriceUpdates() {
-		List<Car> list = carRepository.getCars();
-		list.forEach(str -> System.out.println(str));
+		carRepository.getCars().forEach(s -> System.out.println(s));
 		carRepository.updatePrices(2);
-		list = carRepository.getCars();	
-		list.forEach(str -> System.out.println(str));
+		carRepository.getCars().forEach(s -> System.out.println(s));
 
 	}
-	
+
 	@Test
 	public void chechCompareToAvg() {
 		orderRepository.getCompToAvg();
+
+	}
+
+	@Test
+	public void chechOrderReports() {
+		orderRepository.getOrderReports().forEach(o -> System.out.println(o.toString()));
 	}
 
 }

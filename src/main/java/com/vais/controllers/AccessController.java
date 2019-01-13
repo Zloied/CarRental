@@ -14,6 +14,7 @@ import com.vais.entities.Car;
 import com.vais.entities.Order;
 import com.vais.entities.User;
 import com.vais.models.CarStatistic;
+import com.vais.models.OrderDaily;
 import com.vais.repositories.CarRepository;
 import com.vais.repositories.OrderRepository;
 import com.vais.repositories.UserRepository;
@@ -161,6 +162,19 @@ public class AccessController {
 			return "redirect:/home";
 		}
 
+	}
+
+	@RequestMapping(value = "/managerReports")
+	public String goManagerReports(ModelMap modelMap, Model model) {
+
+		String role = (String) modelMap.get("role");
+		if ("manager".equals(role)) {
+			List<OrderDaily> orders = orderRepository.getOrderReports();
+			model.addAttribute("listOrderReports", orders);
+			return "managerOrdersReports";
+		} else {
+			return "redirect:/home";
+		}
 	}
 
 	@RequestMapping(value = "/userView")

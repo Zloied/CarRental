@@ -2,10 +2,6 @@ package com.vais.repositories;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaUpdate;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -61,8 +57,8 @@ public class CarRepository {
 	public List<CarStatistic> getCarsStatistic() {
 		List<CarStatistic> carsStat = null;
 
-		String sql = "Select new " + CarStatistic.class.getName() + " (a.id, a.model, COUNT(b.carId)) from "
-				+ Car.class.getName() + " a inner join " + OrderItem.class.getName() + " b ON a.id=b.carId "
+		String sql = "Select new " + CarStatistic.class.getName() + " (a.id, a.model, COUNT(b.carId)) FROM "
+				+ Car.class.getName() + " a INNER JOIN " + OrderItem.class.getName() + " b ON a.id=b.carId "
 				+ " GROUP BY a.id " + " ORDER BY COUNT(b.carId) DESC";
 		Session session = this.sessionFactory.getCurrentSession();
 		Query<CarStatistic> query = session.createQuery(sql, CarStatistic.class);
@@ -114,18 +110,18 @@ public class CarRepository {
 		Session session = this.sessionFactory.getCurrentSession();
 		session.update(Car.class.getName(), car);
 	}
-	
-	public void updatePrices(Integer coef) {
-		EntityManager session = this.sessionFactory.getCurrentSession();
-		
-		CriteriaBuilder cb = session.getCriteriaBuilder();
-		CriteriaUpdate<Car> update = cb.createCriteriaUpdate(Car.class);
-		//Root<Car> root = update.from(Car.class);
-		update.set("cost", coef);
-		
-		session.createQuery(update).executeUpdate();
+
+	public void updatePrices(double coef) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		session.flush();
+		//String sql = "UPDATE car_rental.cars SET price=price*" + coef + ";";
+		String sql = "UPDATE "+Car.class.getName()+" SET cost=cost*" + coef ;
+		session.createQuery(sql).executeUpdate();
+
+
 	}
-	
+
 	/**
 	 * deletes car from database by incoming id
 	 * 

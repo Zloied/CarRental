@@ -62,7 +62,7 @@ public class UserRepository {
 	 */
 	public User getUserByName(String login) {
 		try {
-			String sql = "Select e from " + User.class.getName() + " e Where e.name =:name";
+			String sql = "SELECT e FROM " + User.class.getName() + " e WHERE e.name =:name";
 
 			Session session = this.sessionFactory.getCurrentSession();
 			Query<User> query = session.createQuery(sql, User.class);
@@ -96,7 +96,7 @@ public class UserRepository {
 		List<User> userList = null;
 
 		Session session = this.sessionFactory.getCurrentSession();
-		String sql = "from " + User.class.getName();
+		String sql = "FROM " + User.class.getName();
 		Query<User> query = session.createQuery(sql, User.class);
 		userList = query.getResultList();
 
@@ -113,7 +113,7 @@ public class UserRepository {
 		List<User> list = null;
 
 		Session session = this.sessionFactory.getCurrentSession();
-		String sql = "SELECT * FROM car_rental.users where users.id = ANY (SELECT orders.userId FROM car_rental.orders "
+		String sql = "SELECT * FROM car_rental.users WHERE users.id = ANY (SELECT orders.userId FROM car_rental.orders "
 				+ "GROUP BY orders.userId HAVING COUNT(orders.userId) >?)";
 		Query<User> query = session.createNativeQuery(sql, User.class);
 		query.setParameter(1, number);
@@ -131,8 +131,8 @@ public class UserRepository {
 	public List<UserInfo> getUsersInfo() {
 		List<UserInfo> usersInfo = null;
 
-		String Sql = "Select new " + UserInfo.class.getName() + "(u.id, u.name, u.email) " + " from "
-				+ User.class.getName() + " u order by u.id";
+		String Sql = "SELECT new " + UserInfo.class.getName() + "(u.id, u.name, u.email) " + " FROM "
+				+ User.class.getName() + " u ORDER BY u.id";
 		Session session = this.sessionFactory.getCurrentSession();
 		Query<UserInfo> uQuery = session.createQuery(Sql, UserInfo.class);
 		usersInfo = uQuery.getResultList();
@@ -152,15 +152,15 @@ public class UserRepository {
 		List<UserInfo> infoList = null;
 
 		// Building a criteria
-		Session session1 = this.sessionFactory.getCurrentSession();
-		CriteriaBuilder criteria = session1.getCriteriaBuilder();
+		Session session = this.sessionFactory.getCurrentSession();
+		CriteriaBuilder criteria = session.getCriteriaBuilder();
 		CriteriaQuery<UserInfo> q = criteria.createQuery(UserInfo.class);
 		Root<User> root = q.from(User.class);
 		q.select(criteria.construct(UserInfo.class, root.get("id"), root.get("name"), root.get("email")));
 		//q.select(criteria.construct(UserInfo.class, root.get(User_.id), root.get(User_.name), root.get(User_.email)));
 
 		// setting up pagination
-		TypedQuery<UserInfo> quer = session1.createQuery(q);
+		TypedQuery<UserInfo> quer = session.createQuery(q);
 		quer.setFirstResult(begin);
 		quer.setMaxResults(max);
 		infoList = quer.getResultList();

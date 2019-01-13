@@ -20,7 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
-import com.vais.models.OrderStat;
+import com.vais.models.OrderInfo;
 
 /**
  * 
@@ -31,7 +31,7 @@ import com.vais.models.OrderStat;
  */
 
 @Entity
-@SqlResultSetMapping(name = "OrderStatMapping", classes = @ConstructorResult(targetClass = OrderStat.class, columns = {
+@SqlResultSetMapping(name = "OrderInfoMapping", classes = @ConstructorResult(targetClass = OrderInfo.class, columns = {
 		@ColumnResult(name = "id", type = Long.class), @ColumnResult(name = "userId", type = Long.class),
 		@ColumnResult(name = "bill", type = Long.class) }))
 

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.vais.entities.Order;
 import com.vais.entities.OrderItem;
 import com.vais.entities.User;
+import com.vais.models.OrderDaily;
 import com.vais.models.OrderStatistics;
 import com.vais.models.OrderUsersDetail;
 
@@ -157,6 +158,16 @@ public class OrderRepository {
 			}
 			System.out.println("");
 		}
+	}
+
+	public List<OrderDaily> getOrderReports() {
+
+		String sql = "SELECT new " + OrderDaily.class.getName() + " (SUM(a.bill), COUNT(a.id),a.start_date) " + "FROM "
+				+ Order.class.getName() + " a GROUP BY a.start_date ORDER BY a.start_date DESC";
+		Session session = this.sessionFactory.getCurrentSession();
+		Query<OrderDaily> query = session.createQuery(sql, OrderDaily.class);
+
+		return query.getResultList();
 	}
 
 }
