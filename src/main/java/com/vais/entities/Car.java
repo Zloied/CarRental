@@ -40,7 +40,7 @@ public class Car implements Serializable {
 	@Column(name = "mark")
 	private String mark;
 
-	@Column(name = "car_Class")
+	@Column(name = "car_class")
 	private String carClass;
 
 	@Column(name = "cost")

@@ -160,6 +160,11 @@ public class OrderRepository {
 		}
 	}
 
+	/**
+	 * retrieves statistic how many orders and how much money was gained on each day
+	 * 
+	 * @return list of OrderDaily class entities
+	 */
 	public List<OrderDaily> getOrderReports() {
 
 		String sql = "SELECT new " + OrderDaily.class.getName() + " (SUM(a.bill), COUNT(a.id),a.start_date) " + "FROM "
