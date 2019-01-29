@@ -2,6 +2,12 @@ package com.vais.repositories;
 
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -93,10 +99,10 @@ public class OrderRepository {
 	public List<Order> getOrdersByUser(Long userId) {
 		List<Order> orderList = null;
 
-		String sql = "Select e from " + Order.class.getName() + " e Where e.userId =:userId";
+		String sql = "SELECT e FROM " + Order.class.getName() + " e WHERE e.userId =:" + Order.ATTRIBUTE_USER_ID;
 		Session session = this.sessionFactory.getCurrentSession();
 		Query<Order> query = session.createQuery(sql, Order.class);
-		query.setParameter("userId", userId);
+		query.setParameter(Order.ATTRIBUTE_USER_ID, userId);
 		orderList = query.getResultList();
 
 		return orderList;
@@ -149,9 +155,8 @@ public class OrderRepository {
 		Session session = this.sessionFactory.getCurrentSession();
 
 		@SuppressWarnings("unchecked")
-		Query<Object[]> query = session.createNativeQuery(sql);
-		List<Object[]> oList = query.getResultList();
 
+		List<Object[]> oList = session.createNativeQuery(sql).getResultList();
 		for (Object[] objects : oList) {
 			for (int i = 0; i < objects.length; i++) {
 				System.out.print(objects[i].toString() + " | ");
@@ -175,4 +180,24 @@ public class OrderRepository {
 		return query.getResultList();
 	}
 
+	public void getUsersByOrderCount() {
+		// creating the outer query
+		Session session = this.sessionFactory.getCurrentSession();
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+		CriteriaQuery<User> cq = cb.createQuery(User.class);
+		Root<User> root = cq.from(User.class);
+
+		// orders made up by user
+		Subquery<Long> sub = cq.subquery(Long.class);
+		Root<Order> subRoot = sub.from(Order.class);
+		sub.select(cb.count(subRoot.get(Order.ATTRIBUTE_ID)));
+		sub.groupBy(subRoot.get(Order.ATTRIBUTE_USER_ID));
+		sub.where(cb.equal(root.get(User.ATTRIBUTE_ID), subRoot.get(Order.ATTRIBUTE_USER_ID)));
+
+		// check the result of the subquery
+		cq.where(cb.greaterThanOrEqualTo(sub, 1L));
+		TypedQuery<User> query = session.createQuery(cq);
+		List<User> list = query.getResultList();
+		list.forEach(e -> System.out.println(e));
+	}
 }

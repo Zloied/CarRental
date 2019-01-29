@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-
-
 /**
  * 
  * @author Eduard . This class is entity for User from Database. This class has
@@ -25,13 +23,16 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = -4062784936522642553L;
 
+	public static final String ATTRIBUTE_ID = "id";
+	public static final String ATTRIBUTE_NAME = "name";
+	public static final String ATTRIBUTE_PASSWORD = "password";
+	public static final String ATTRIBUTE_ROLE = "role";
+	public static final String ATTRIBUTE_EMAIL = "email";
+	public static final String ATTRIBUTE_STATUS = "status";
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="rental_seq" )
-	@SequenceGenerator( 
-			name="rental_seq",
-			sequenceName="car_rental.users_id_seq",
-			allocationSize=10
-			)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rental_seq")
+	@SequenceGenerator(name = "rental_seq", sequenceName = "car_rental.users_id_seq", allocationSize = 10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

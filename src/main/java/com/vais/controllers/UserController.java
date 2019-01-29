@@ -77,34 +77,36 @@ public class UserController {
 	 * @return redirection to appropriate page
 	 */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String registration(ModelMap model, @RequestParam String login, @RequestParam String password1,
-			@RequestParam String email) {
+	public String registration(ModelMap model, @RequestParam(required = false) String login,
+			@RequestParam(required = false) String password1, @RequestParam String email) {
 
-		User user = userRepository.getUserByName(login);
-		if (user != null) {
-			model.put("msg", "such user already exists");
-			return "redirect:/registrations";
-		}
+		if (login != null && password1 != null) {
+			User user = userRepository.getUserByName(login);
+			if (user != null) {
+				model.put("msg", "such user already exists");
+				return "redirect:/registrations";
+			}
 
-		userRepository.addUser(new User(login, password1, "user", email, "unconfirmed"));
-		User newUser = userRepository.getUserByName(login);
-		model.put("userId", newUser.getId());
-		model.put("role", newUser.getRole());
+			userRepository.addUser(new User(login, password1, "user", email, "unconfirmed"));
+			User newUser = userRepository.getUserByName(login);
+			model.put("userId", newUser.getId());
+			model.put("role", newUser.getRole());
 
-		switch (newUser.getRole()) {
-		case "user":
-			return "redirect:/userHome";
+			switch (newUser.getRole()) {
+			case "user":
+				return "redirect:/userHome";
+			case "admin":
+				return "redirect:/adminHome";
 
-		case "admin":
-			return "redirect:/adminHome";
+			case "manager":
+				return "redirect:/managerHome";
+			default:
+				return "redirect:/login";
 
-		case "manager":
-			return "redirect:/managerHome";
-		default:
+			}
+		} else {
 			return "redirect:/login";
-
 		}
-
 	}
 
 	/**
@@ -140,20 +142,20 @@ public class UserController {
 	 * @return appropriate redirect link
 	 */
 	@RequestMapping(value = "/users/{userId}")
-	public String changeStatus(@PathVariable Long userId, @RequestParam String setStatus,
+	public String changeStatus(@PathVariable Long userId, @RequestParam(required = false) String setStatus,
 			@RequestParam String command) {
-
-		switch (command) {
-		case "Delete":
-			userRepository.deleteUser(userId);
-			break;
-		case "ChangeStatus":
-			userRepository.updateUserStatus(userId, setStatus);
-			break;
-		default:
-			break;
+		if (setStatus != null) {
+			switch (command) {
+			case "Delete":
+				userRepository.deleteUser(userId);
+				break;
+			case "ChangeStatus":
+				userRepository.updateUserStatus(userId, setStatus);
+				break;
+			default:
+				break;
+			}
 		}
-
 		return "redirect:/adminHome";
 	}
 
@@ -169,8 +171,8 @@ public class UserController {
 	 * @return appropriate redirect link
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.POST)
-	public String addUser(@RequestParam String login, @RequestParam String email, @RequestParam String password1,
-			@RequestParam String setRole, ModelMap modelMap) {
+	public String addUser(@RequestParam String login, @RequestParam(required = true) String email,
+			@RequestParam(required = true) String password1, @RequestParam String setRole, ModelMap modelMap) {
 
 		String role = (String) modelMap.get("role");
 		if ("admin".equals(role)) {

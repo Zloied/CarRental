@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.vais.entities.User;
 import com.vais.models.UserInfo;
+import com.vais.models.User_;
 
 @Repository
 @Transactional
@@ -38,12 +39,12 @@ public class UserRepository {
 		User user = null;
 
 		try {
-			String sql = "Select e from " + User.class.getName() + " e Where e.name =:name and e.password =:password";
+			String sql = "SELECT e FROM " + User.class.getName() + " e WHERE e.name =:name AND e.password =:password";
 
 			Session session = this.sessionFactory.getCurrentSession();
 			Query<User> query = session.createQuery(sql, User.class);
-			query.setParameter("name", login);
-			query.setParameter("password", password);
+			query.setParameter(User.ATTRIBUTE_NAME, login);
+			query.setParameter(User.ATTRIBUTE_PASSWORD, password);
 			user = (User) query.getSingleResult();
 
 		} catch (NoResultException e) {
@@ -62,11 +63,11 @@ public class UserRepository {
 	 */
 	public User getUserByName(String login) {
 		try {
-			String sql = "SELECT e FROM " + User.class.getName() + " e WHERE e.name =:name";
+			String sql = "SELECT e FROM " + User.class.getName() + " e WHERE e.name=:" + User.ATTRIBUTE_NAME;
 
 			Session session = this.sessionFactory.getCurrentSession();
 			Query<User> query = session.createQuery(sql, User.class);
-			query.setParameter("name", login);
+			query.setParameter(User.ATTRIBUTE_NAME, login);
 			return (User) query.getSingleResult();
 
 		} catch (NoResultException e) {
@@ -123,7 +124,7 @@ public class UserRepository {
 	}
 
 	/**
-	 * Retries short info about users from database.Information consists of user's
+	 * Retrieves short info about users from database.Information consists of user's
 	 * id , user's name , user's email.
 	 * 
 	 * @return List of UserInfo representation class
@@ -144,8 +145,8 @@ public class UserRepository {
 	 * Retrieves paginated data as entities list of UserInfo representation class .
 	 * This method uses JPA Criteria IPA to construct query
 	 * 
-	 * @param max number of record for one page
-	 * @param begin  starting point in the database
+	 * @param max   number of record for one page
+	 * @param begin starting point in the database
 	 * @return list of entities of UserInfo POJO representation class
 	 */
 	public List<UserInfo> getPaginatedUInfo(int max, int begin) {
@@ -156,8 +157,7 @@ public class UserRepository {
 		CriteriaBuilder criteria = session.getCriteriaBuilder();
 		CriteriaQuery<UserInfo> q = criteria.createQuery(UserInfo.class);
 		Root<User> root = q.from(User.class);
-		q.select(criteria.construct(UserInfo.class, root.get("id"), root.get("name"), root.get("email")));
-		//q.select(criteria.construct(UserInfo.class, root.get(User_.id), root.get(User_.name), root.get(User_.email)));
+		q.select(criteria.construct(UserInfo.class, root.get(User_.ID), root.get(User_.NAME), root.get(User_.EMAIL)));
 
 		// setting up pagination
 		TypedQuery<UserInfo> quer = session.createQuery(q);

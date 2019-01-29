@@ -2,7 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html >
-<fmt:setLocale value="${theLocale}" />
 <html>
 <head>
 <title>New order</title>
@@ -27,6 +26,7 @@ body {
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="userNewOrder">New order</a></li>
 				<li><a href="userView">My Orders</a></li>
+				<li><a href="userFeedback">Leave feedback</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="logOut"><span
@@ -71,7 +71,7 @@ body {
 				<label class="radio-inline"> <input type="radio"
 					name="driver" value="yes"> Yes
 				</label> <label class="radio-inline"> <input type="radio"
-					name="driver" value="no">No
+					name="driver" value="no" checked>No
 				</label>
 			</div>
 			<div class="form-group">
@@ -92,6 +92,17 @@ body {
 
 		</form>
 	</div>
+	<script>
+		$(document).ready(
+				function() {
+					let today = new Date().toISOString().substr(0, 10);
+					document.getElementById("startDate").value = today;
+					document.querySelector("#endDate").min = document
+							.querySelector("#startDate").value;
+					document.querySelector("#endDate").value = document
+							.querySelector("#startDate").value;
+				});
+	</script>
 	<script src="js/dateCheck.js"></script>
 	<script src="js/tableSearch.js"></script>
 </body>

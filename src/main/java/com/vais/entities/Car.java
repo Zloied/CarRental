@@ -24,13 +24,15 @@ public class Car implements Serializable {
 
 	private static final long serialVersionUID = -5175608523574439852L;
 
+	public static final String ATTRIBUTE_ID = "id";
+	public static final String ATTRIBUTE_MODEL = "model";
+	public static final String ATTRIBUTE_MARK = "mark";
+	public static final String ATTRIBUTE_CAR_CLASS = "car_class";
+	public static final String ATTRIBUTE_COST = "cost";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "car_seq")
-	@SequenceGenerator(
-			name = "car_seq",
-			sequenceName = "car_rental.cars_id_seq",
-			allocationSize = 10
-			)
+	@SequenceGenerator(name = "car_seq", sequenceName = "car_rental.cars_id_seq", allocationSize = 10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

@@ -2,10 +2,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html >
-<fmt:setLocale value="${theLocale}" />
 <html>
 <head>
-<title>Insert title here</title>
+<title>Sign in</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="css/bootstrap.css">
 <link rel="stylesheet" href="css/custom.css">
@@ -41,7 +40,6 @@ body {
 	</nav>
 	<div align="center">
 		<form action="login" method="post" onsubmit="return checkForm(this)">
-
 			<div class="loginInp">
 				<div class="form-group">
 					<label for="login">Login</label> <br> <input type="text"

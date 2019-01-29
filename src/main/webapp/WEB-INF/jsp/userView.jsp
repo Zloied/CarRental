@@ -2,7 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html >
-<fmt:setLocale value="${theLocale}" />
 <html>
 <head>
 <title>My orders</title>
@@ -27,6 +26,7 @@ body {
 			<ul class="nav navbar-nav">
 				<li><a href="userNewOrder">New_order</a></li>
 				<li class="active"><a href="userView">My_Orders</a></li>
+				<li><a href="userFeedback">Leave feedback</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="logOut"><span

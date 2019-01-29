@@ -43,6 +43,7 @@ public class AccessController {
 
 	@RequestMapping(value = "/login")
 	public String goSignIn() {
+		orderRepository.getUsersByOrderCount();
 		return "loginPage";
 	}
 
@@ -198,6 +199,17 @@ public class AccessController {
 		String role = (String) model.get("role");
 		if ("user".equals(role)) {
 			return "userHome";
+		} else {
+			return "redirect:/home";
+		}
+	}
+
+	@RequestMapping(value = "/userFeedback")
+	public String userFeedback(ModelMap model) {
+
+		String role = (String) model.get("role");
+		if ("user".equals(role)) {
+			return "userFeedback";
 		} else {
 			return "redirect:/home";
 		}

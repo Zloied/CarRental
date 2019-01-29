@@ -2,6 +2,10 @@ package com.vais.repositories;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -81,7 +85,7 @@ public class CarRepository {
 
 		Session session = this.sessionFactory.getCurrentSession();
 		String sql = "SELECT new " + CarStatistic.class.getName() + " (a.id, a.model, COUNT(b.carId)) from "
-				+ Car.class.getName() + " a inner join " + OrderItem.class.getName() + " b ON a.id = b.carId "
+				+ Car.class.getName() + " a INNER JOIN " + OrderItem.class.getName() + " b ON a.id = b.carId "
 				+ " GROUP BY a.id " + " HAVING COUNT(b.carId)> :number";
 		Query<CarStatistic> query = session.createQuery(sql, CarStatistic.class);
 		query.setParameter("number", number);
@@ -115,10 +119,26 @@ public class CarRepository {
 		Session session = this.sessionFactory.getCurrentSession();
 
 		session.flush();
-		//String sql = "UPDATE car_rental.cars SET price=price*" + coef + ";";
-		String sql = "UPDATE "+Car.class.getName()+" SET cost=cost*" + coef ;
+		String sql = "UPDATE " + Car.class.getName() + " SET cost=cost*" + coef;
 		session.createQuery(sql).executeUpdate();
 
+	}
+
+	public void updateCars(Long newAmount) {
+		Session session = this.sessionFactory.getCurrentSession();
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+
+		// creating update
+		CriteriaUpdate<Car> update = cb.createCriteriaUpdate(Car.class);
+
+		// setting root class
+		Root<Car> e = update.from(Car.class);
+
+		// setting update and where clause
+		update.set(Car.ATTRIBUTE_COST, newAmount);
+		update.where(cb.greaterThanOrEqualTo(e.get(Car.ATTRIBUTE_COST), 100L));
+
+		session.createQuery(update).executeUpdate();
 
 	}
 

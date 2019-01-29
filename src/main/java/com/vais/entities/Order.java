@@ -2,8 +2,8 @@ package com.vais.entities;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,9 +40,17 @@ public class Order implements Serializable {
 
 	private static final long serialVersionUID = 2159650216587665394L;
 
+	public static final String ATTRIBUTE_ID = "id";
+	public static final String ATTRIBUTE_USER_ID = "userId";
+	public static final String ATTRIBUTE_BILL = "bill";
+	public static final String ATTRIBUTE_STATUS = "status";
+	public static final String ATTRIBUTE_DRIVER = "driver";
+	public static final String ATTRIBUTE_START_DATE = "start_date";
+	public static final String ATTRIBUTE_END_DATE = "end_date";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
-	@SequenceGenerator(name = "order_seq", sequenceName = "car_rental.orders_id_seq", allocationSize = 10, initialValue = 7)
+	@SequenceGenerator(name = "order_seq", sequenceName = "car_rental.order_seq")
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 
@@ -51,7 +59,7 @@ public class Order implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "order_id")
-	private List<OrderItem> orderItems;
+	private Set<OrderItem> orderItems;
 
 	@Column(name = "bill")
 	private int bill;
@@ -99,14 +107,14 @@ public class Order implements Serializable {
 	/**
 	 * @return the orderItems
 	 */
-	public List<OrderItem> getOrderItems() {
+	public Set<OrderItem> getOrderItems() {
 		return orderItems;
 	}
 
 	/**
 	 * @param orderItems the orderItems to set
 	 */
-	public void setOrderItems(List<OrderItem> orderItems) {
+	public void setOrderItems(Set<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
 
@@ -115,9 +123,10 @@ public class Order implements Serializable {
 	 */
 	public void addOrderItem(OrderItem orderItem) {
 		if (orderItems == null) {
-			orderItems = new ArrayList<>();
+			orderItems = new HashSet<>();
 		}
 		this.orderItems.add(orderItem);
+
 	}
 
 	/**

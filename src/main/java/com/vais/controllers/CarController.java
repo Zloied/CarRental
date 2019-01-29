@@ -89,15 +89,18 @@ public class CarController {
 	 * @return redirect link
 	 */
 	@RequestMapping(value = "/cars/{carId}", method = RequestMethod.POST)
-	public String changeCar(@RequestParam String model, @RequestParam String mark, @RequestParam String carClass,
-			@RequestParam int carCost, @PathVariable Long carId, ModelMap modelMap) {
+	public String changeCar(@RequestParam String model, @RequestParam(required = false) String mark,
+			@RequestParam(required = false) String carClass,
+			@RequestParam(defaultValue = "0", required = false) int carCost, @PathVariable Long carId,
+			ModelMap modelMap) {
 
 		String role = (String) modelMap.get("role");
 		if ("manager".equals(role)) {
-			Car car = new Car(model, mark, carClass, carCost);
-			car.setId(carId);
-			carRepository.updateCar(car);
-
+			if ((mark != null) && (carClass != null) && (carCost != 0)) {
+				Car car = new Car(model, mark, carClass, carCost);
+				car.setId(carId);
+				carRepository.updateCar(car);
+			}
 			return "redirect:/managerCars";
 		} else {
 			return "redirect:/home";
@@ -117,13 +120,15 @@ public class CarController {
 	 *         match "manager"
 	 */
 	@RequestMapping(value = "/cars", method = RequestMethod.POST)
-	public String addCar(@RequestParam String carName, @RequestParam String mark, @RequestParam String carClass,
-			@RequestParam int carCost, ModelMap modelMap) {
-
+	public String addCar(@RequestParam(required = false) String carName, @RequestParam(required = false) String mark,
+			@RequestParam(required = false) String carClass,
+			@RequestParam(defaultValue = "0", required = false) int carCost, ModelMap modelMap) {
 		String role = (String) modelMap.get("role");
 		if ("manager".equals(role)) {
-			Car car = new Car(carName, mark, carClass, carCost);
-			carRepository.addCar(car);
+			if ((carName != null) && (mark != null) && (carClass != null) && (carCost != 0)) {
+				Car car = new Car(carName, mark, carClass, carCost);
+				carRepository.addCar(car);
+			}
 			return "redirect:/managerCars";
 		} else {
 			return "redirect:/home";

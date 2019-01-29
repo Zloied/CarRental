@@ -40,8 +40,8 @@ public class RentalApplicationTests {
 		// Mapping native query result to POJO model class
 		String sql = "Select id, userId, bill FROM car_rental.orders ";
 		Session session = this.sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
 
+		@SuppressWarnings("unchecked")
 		Query<OrderInfo> query = session.createNativeQuery(sql, "OrderInfoMapping");
 		List<OrderInfo> stats = query.getResultList();
 		stats.forEach(st -> System.out.println(st));
@@ -59,7 +59,8 @@ public class RentalApplicationTests {
 	@Test
 	public void checkPriceUpdates() {
 		carRepository.getCars().forEach(s -> System.out.println(s));
-		carRepository.updatePrices(2);
+		carRepository.updatePrices(1);
+		//carRepository.updateCars(2L);
 		carRepository.getCars().forEach(s -> System.out.println(s));
 
 	}
