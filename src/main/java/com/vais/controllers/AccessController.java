@@ -36,14 +36,14 @@ public class AccessController {
 	@Autowired
 	private CarRepository carRepository;
 
-	@RequestMapping(value = "/home")
+	@RequestMapping(value = { "/home", "/" })
 	public String showHomePage(ModelMap model) {
 		return "home";
 	}
 
 	@RequestMapping(value = "/login")
 	public String goSignIn() {
-		orderRepository.getUsersByOrderCount();
+		// orderRepository.getUsersByOrderCount();
 		return "loginPage";
 	}
 

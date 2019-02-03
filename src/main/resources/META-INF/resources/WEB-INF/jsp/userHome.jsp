@@ -2,11 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html >
-<c:set var="theLocale"
-	value="${not empty param.theLocale ? param.theLocale : pageContext.request.locale }"
-	scope="session" />
-<fmt:setLocale value="${theLocale}" />
-<fmt:bundle basename="i18n.resources" />
 <html>
 <head>
 <title>Main page</title>
@@ -30,6 +25,7 @@ body {
 			<ul class="nav navbar-nav">
 				<li><a href="userNewOrder">New order</a></li>
 				<li><a href="userView"> My Orders</a></li>
+				<li><a href="userFeedback">Leave feedback</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="logOut"> <span
@@ -43,7 +39,7 @@ body {
 	<div align="center">
 		<div class="btn-group">
 			<a href="userNewOrder" class="btn btn-info"> New_order </a> <a
-				href="userView" class="btn btn-info"> My_Orders </a> <a href="#"
+				href="userView" class="btn btn-info"> My_Orders </a> <a href="userFeedback"
 				class="btn btn-info"> Leave feedback </a>
 		</div>
 	</div>

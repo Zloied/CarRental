@@ -2,12 +2,6 @@ package com.vais.repositories;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -20,6 +14,7 @@ import com.vais.entities.Order;
 import com.vais.entities.OrderItem;
 import com.vais.entities.User;
 import com.vais.models.OrderDaily;
+import com.vais.models.OrderInfo;
 import com.vais.models.OrderStatistics;
 import com.vais.models.OrderUsersDetail;
 
@@ -116,10 +111,10 @@ public class OrderRepository {
 	public List<OrderUsersDetail> getOrdersDetails() {
 		List<OrderUsersDetail> ordDetList = null;
 
-		String hql = "Select new " + OrderUsersDetail.class.getName() + "(a.id, b.name, a.bill)" + " from "
+		String sql = "Select new " + OrderUsersDetail.class.getName() + "(a.id, b.name, a.bill)" + " from "
 				+ Order.class.getName() + " a inner join " + User.class.getName() + " b ON a.userId=b.id ";
 		Session session = this.sessionFactory.getCurrentSession();
-		Query<OrderUsersDetail> oQuery = session.createQuery(hql, OrderUsersDetail.class);
+		Query<OrderUsersDetail> oQuery = session.createQuery(sql, OrderUsersDetail.class);
 		ordDetList = oQuery.getResultList();
 
 		return ordDetList;
@@ -147,7 +142,8 @@ public class OrderRepository {
 	/**
 	 * pulls out from database recursive statistic - order's id, user's id, bill of
 	 * the order and average price of orders made up by user . This method uses
-	 * window sql function to pull out required data.
+	 * window sql function to pull out required data. Requires modifications before
+	 * using in the "production"!
 	 */
 	public void getCompToAvg() {
 
@@ -180,24 +176,23 @@ public class OrderRepository {
 		return query.getResultList();
 	}
 
-	public void getUsersByOrderCount() {
-		// creating the outer query
+	/**
+	 * Retrieves short info about orders from the database as OrderInfo
+	 * representation class. This method uses SqlResultSetMaping from entity to POJO
+	 * class.
+	 * 
+	 * @return List of OrderInfo objects
+	 */
+	public List<OrderInfo> getOrdersInfo() {
+		// Mapping native query result to POJO model class
+		String sql = "Select id, userId, bill FROM car_rental.orders ";
 		Session session = this.sessionFactory.getCurrentSession();
-		CriteriaBuilder cb = session.getCriteriaBuilder();
-		CriteriaQuery<User> cq = cb.createQuery(User.class);
-		Root<User> root = cq.from(User.class);
 
-		// orders made up by user
-		Subquery<Long> sub = cq.subquery(Long.class);
-		Root<Order> subRoot = sub.from(Order.class);
-		sub.select(cb.count(subRoot.get(Order.ATTRIBUTE_ID)));
-		sub.groupBy(subRoot.get(Order.ATTRIBUTE_USER_ID));
-		sub.where(cb.equal(root.get(User.ATTRIBUTE_ID), subRoot.get(Order.ATTRIBUTE_USER_ID)));
+		@SuppressWarnings("unchecked")
+		Query<OrderInfo> query = session.createNativeQuery(sql, "OrderInfoMapping");
+		List<OrderInfo> stats = query.getResultList();
+		stats.forEach(st -> System.out.println(st));
 
-		// check the result of the subquery
-		cq.where(cb.greaterThanOrEqualTo(sub, 1L));
-		TypedQuery<User> query = session.createQuery(cq);
-		List<User> list = query.getResultList();
-		list.forEach(e -> System.out.println(e));
+		return stats;
 	}
 }

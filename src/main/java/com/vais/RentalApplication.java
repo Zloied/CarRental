@@ -33,9 +33,10 @@ public class RentalApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RentalApplication.class, args);
 	}
-	
+
 	/**
 	 * This method configures dataSource from application.properties file
+	 * 
 	 * @return sql DataSource
 	 */
 	@Bean(name = "dataSource")
@@ -52,11 +53,11 @@ public class RentalApplication {
 
 		return dataSource;
 	}
-	
-	
+
 	/**
 	 * This method create Hibernate SessionFactory based on incoming dataSource
-	 * @param dataSource  requires to configure sessionFactory 
+	 * 
+	 * @param dataSource requires to configure sessionFactory
 	 * @return Hibernate SessionFactory
 	 * @throws Exception if pointed property doesn't exist
 	 */
@@ -66,17 +67,17 @@ public class RentalApplication {
 		Properties properties = new Properties();
 
 		// See: application.properties
-		properties.put("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect"));		
+		properties.put("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect"));
 		properties.put("hibernate.show_sql", env.getProperty("spring.jpa.show-sql"));
 		properties.put("hibernate.format_sql", env.getProperty("spring.jpa.properties.hibernate.format_sql"));
 		properties.put("current_session_context_class", //
 				env.getProperty("spring.jpa.properties.hibernate.current_session_context_class"));
 
 		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
-		
-        // Fix Postgres JPA Error:
-        // Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
-        properties.put("hibernate.temp.use_jdbc_metadata_defaults",false);
+
+		// Fix Postgres JPA Error:
+		// Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+		properties.put("hibernate.temp.use_jdbc_metadata_defaults", false);
 
 		// Package contain entity classes
 		factoryBean.setPackagesToScan(new String[] { "" });
@@ -90,7 +91,7 @@ public class RentalApplication {
 		return sesf;
 
 	}
-	
+
 	/**
 	 * This method creates Hibernate TransactionManager based on given
 	 * SessionFactory

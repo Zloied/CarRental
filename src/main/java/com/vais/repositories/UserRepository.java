@@ -7,6 +7,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vais.entities.Order;
 import com.vais.entities.User;
 import com.vais.models.UserInfo;
 import com.vais.models.User_;
@@ -119,6 +121,35 @@ public class UserRepository {
 		Query<User> query = session.createNativeQuery(sql, User.class);
 		query.setParameter(1, number);
 		list = query.getResultList();
+
+		return list;
+	}
+
+	/**
+	 * retrieves users from database sorted out by : how many orders was made up by
+	 * each user. This method uses Criteria API .
+	 * 
+	 * @param countNumber minimal number of orders made up by user
+	 * @return List of user entities
+	 */
+	public List<User> getUsersByOrderCount(Long countNumber) {
+		// creating the outer query
+		Session session = this.sessionFactory.getCurrentSession();
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+		CriteriaQuery<User> cq = cb.createQuery(User.class);
+		Root<User> root = cq.from(User.class);
+
+		// orders made up by user
+		Subquery<Long> sub = cq.subquery(Long.class);
+		Root<Order> subRoot = sub.from(Order.class);
+		sub.select(cb.count(subRoot.get(Order.ATTRIBUTE_ID)));
+		sub.groupBy(subRoot.get(Order.ATTRIBUTE_USER_ID));
+		sub.where(cb.equal(root.get(User.ATTRIBUTE_ID), subRoot.get(Order.ATTRIBUTE_USER_ID)));
+
+		// check the result of the subquery
+		cq.where(cb.greaterThanOrEqualTo(sub, countNumber));
+		TypedQuery<User> query = session.createQuery(cq);
+		List<User> list = query.getResultList();
 
 		return list;
 	}

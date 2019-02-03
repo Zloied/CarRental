@@ -36,7 +36,7 @@ public class CarRepository {
 		Session session = this.sessionFactory.getCurrentSession();
 		return session.find(Car.class, id);
 	}
-
+	
 	/**
 	 * this method retrieves all cars from database
 	 * 
@@ -115,6 +115,12 @@ public class CarRepository {
 		session.update(Car.class.getName(), car);
 	}
 
+	/**
+	 * Changing cars prices by multiplying on new coefficient
+	 * 
+	 * @param coef incoming coefficient to multiply
+	 */
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void updatePrices(double coef) {
 		Session session = this.sessionFactory.getCurrentSession();
 
@@ -124,6 +130,12 @@ public class CarRepository {
 
 	}
 
+	/**
+	 * sets all prices of cars in the database equal to incoming value. This method
+	 * was performed using Criteria API .
+	 * 
+	 * @param newAmount new price to set
+	 */
 	public void updateCars(Long newAmount) {
 		Session session = this.sessionFactory.getCurrentSession();
 		CriteriaBuilder cb = session.getCriteriaBuilder();
