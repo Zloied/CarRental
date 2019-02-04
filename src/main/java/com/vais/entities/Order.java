@@ -50,7 +50,7 @@ public class Order implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
-	@SequenceGenerator(name = "order_seq", sequenceName = "car_rental.order_seq")
+	@SequenceGenerator(name = "order_seq", sequenceName = "car_rental.orders_id_seq", allocationSize =10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 
