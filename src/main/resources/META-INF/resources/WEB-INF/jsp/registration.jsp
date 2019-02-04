@@ -31,6 +31,7 @@ body {
 				<li class="active"><a href="registration">Sign_up</a></li>
 				<li><a href="about">About</a></li>
 				<li><a href="contacts">Contacts</a></li>
+				<li><a href="feedback">Feedback</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="registration"><span
