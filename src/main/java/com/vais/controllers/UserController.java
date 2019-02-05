@@ -25,7 +25,7 @@ import com.vais.repositories.UserRepository;
  */
 @Controller
 @Transactional
-@SessionAttributes({ "userId", "role" })
+@SessionAttributes({ "userId", "role" , "name" })
 public class UserController {
 
 	@Autowired
@@ -49,7 +49,8 @@ public class UserController {
 		}
 		model.put("userId", user.getId());
 		model.put("role", user.getRole());
-
+		model.put("name", user.getName());
+		
 		switch (user.getRole()) {
 		case "user":
 			return "redirect:/userHome";
@@ -91,6 +92,7 @@ public class UserController {
 			User newUser = userRepository.getUserByName(login);
 			model.put("userId", newUser.getId());
 			model.put("role", newUser.getRole());
+			model.put("name", newUser.getName());
 
 			switch (newUser.getRole()) {
 			case "user":
