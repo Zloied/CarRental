@@ -21,7 +21,6 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 @SpringBootApplication
 @ComponentScan("com.vais")
-
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 

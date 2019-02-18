@@ -114,8 +114,8 @@ public class OrderRepository {
 		String sql = "Select new " + OrderUsersDetail.class.getName() + "(a.id, b.name, a.bill)" + " from "
 				+ Order.class.getName() + " a inner join " + User.class.getName() + " b ON a.userId=b.id ";
 		Session session = this.sessionFactory.getCurrentSession();
-		Query<OrderUsersDetail> oQuery = session.createQuery(sql, OrderUsersDetail.class);
-		ordDetList = oQuery.getResultList();
+		Query<OrderUsersDetail> query = session.createQuery(sql, OrderUsersDetail.class);
+		ordDetList = query.getResultList();
 
 		return ordDetList;
 	}
@@ -129,8 +129,8 @@ public class OrderRepository {
 	public List<OrderStatistics> getOrdersStatisticByUsers() {
 		List<OrderStatistics> ordStat = null;
 
-		String sql = "Select new " + OrderStatistics.class.getName() + " (b.id, b.name, SUM(a.bill)) " + " from "
-				+ Order.class.getName() + " a inner join " + User.class.getName() + " b ON a.userId=b.id "
+		String sql = "SELECT NEW " + OrderStatistics.class.getName() + " (b.id, b.name, SUM(a.bill)) " + " FROM "
+				+ Order.class.getName() + " a INNER JOIN " + User.class.getName() + " b ON a.userId=b.id "
 				+ "GROUP BY b.id";
 		Session session = this.sessionFactory.getCurrentSession();
 		Query<OrderStatistics> query = session.createQuery(sql, OrderStatistics.class);
@@ -191,7 +191,6 @@ public class OrderRepository {
 		@SuppressWarnings("unchecked")
 		Query<OrderInfo> query = session.createNativeQuery(sql, "OrderInfoMapping");
 		List<OrderInfo> stats = query.getResultList();
-		stats.forEach(st -> System.out.println(st));
 
 		return stats;
 	}

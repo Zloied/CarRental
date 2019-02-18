@@ -2,7 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<fmt:setLocale value="${theLocale}" />
 <html>
 <head>
 <title>Insert title here</title>
@@ -75,7 +74,7 @@ body {
 				value="Registration">Sign_up</button>
 
 			<p>${msg}
-			<p>
+			</p>
 		</form>
 	</div>
 	<script src="js/loginvalidation.js"></script>

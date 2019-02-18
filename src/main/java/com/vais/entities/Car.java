@@ -31,8 +31,8 @@ public class Car implements Serializable {
 	public static final String ATTRIBUTE_COST = "cost";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "car_seq")
-	@SequenceGenerator(name = "car_seq", sequenceName = "car_rental.cars_id_seq", allocationSize = 10)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rental_seq")
+	@SequenceGenerator(name = "rental_seq", sequenceName = "car_rental.users_id_seq", allocationSize = 10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

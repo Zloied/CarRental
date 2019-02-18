@@ -31,7 +31,7 @@ public class User implements Serializable {
 	public static final String ATTRIBUTE_STATUS = "status";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rental_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@SequenceGenerator(name = "rental_seq", sequenceName = "car_rental.users_id_seq", allocationSize = 10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;

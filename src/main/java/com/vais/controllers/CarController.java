@@ -67,9 +67,9 @@ public class CarController {
 		System.out.println(role);
 		model.addAttribute("theCar", carRepository.getCar(carId));
 		if ("user".equals(role)) {
-			return "userViewCar";
+			return "redirect:/userViewCar";
 		} else if ("manager".equals(role)) {
-			return "managerCarChange";
+			return "redirect:/managerCarChange";
 		} else {
 			return "redirect:/home";
 		}

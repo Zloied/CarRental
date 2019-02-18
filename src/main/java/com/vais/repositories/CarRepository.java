@@ -101,7 +101,7 @@ public class CarRepository {
 	 */
 	public void addCar(Car car) {
 		Session session = this.sessionFactory.getCurrentSession();
-		session.save(car);
+		session.persist(car);
 	}
 
 	/**

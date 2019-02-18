@@ -30,7 +30,7 @@ body {
 				<li class="active"><a href="adminAdd">Add_User</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="LogOutServ"><span
+				<li><a href="logOut"><span
 						class="glyphicon glyphicon-log-out"></span> LogOut</a></li>
 			</ul>
 		</div>
