@@ -49,7 +49,7 @@ public class Order implements Serializable {
 	public static final String ATTRIBUTE_END_DATE = "end_date";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
 	@SequenceGenerator(name = "order_seq", sequenceName = "car_rental.orders_id_seq", allocationSize =10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
