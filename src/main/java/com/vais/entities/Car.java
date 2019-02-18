@@ -32,7 +32,7 @@ public class Car implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rental_seq")
-	@SequenceGenerator(name = "rental_seq", sequenceName = "car_rental.users_id_seq", allocationSize = 10)
+	@SequenceGenerator(name = "car_seq", sequenceName = "car_rental.cars_id_seq", allocationSize = 10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 
