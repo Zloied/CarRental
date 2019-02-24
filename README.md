@@ -1,4 +1,4 @@
-You can check out version deployed on local server through web on  https://d44df6bc.ngrok.io .
+You can check out version deployed on local server through web on  https://f95622fc.ngrok.io .
 Here is "manager" : login Antonio ; password Ant555 ; Here is "customer" : login Poland ; password Rol111 ;
 
 In order to run this application from command line - java path variable is requiered.
