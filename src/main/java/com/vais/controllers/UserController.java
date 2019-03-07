@@ -2,6 +2,9 @@ package com.vais.controllers;
 
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.vais.entities.User;
 import com.vais.repositories.UserRepository;
@@ -25,46 +27,10 @@ import com.vais.repositories.UserRepository;
  */
 @Controller
 @Transactional
-@SessionAttributes({ "userId", "role" , "name" })
 public class UserController {
 
 	@Autowired
 	private UserRepository userRepository;
-
-	/**
-	 * check if user with such parameters exists in database. After that puts user's
-	 * data into session and redirects request to appropriate page.
-	 * 
-	 * @param model Spring ModelMap class used to put parameters into session
-	 * @param login received from request
-	 * @param passw user's password received from request
-	 * @return redirection page
-	 */
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String logIn(ModelMap model, @RequestParam String login, @RequestParam String passw) {
-
-		User user = userRepository.validateUser(login, passw);
-		if (user == null) {
-			return "redirect:/login";
-		}
-		model.put("userId", user.getId());
-		model.put("role", user.getRole());
-		model.put("name", user.getName());
-		
-		switch (user.getRole()) {
-		case "user":
-			return "redirect:/userHome";
-
-		case "admin":
-			return "redirect:adminHome";
-
-		case "manager":
-			return "redirect:managerHome";
-		default:
-			return "redirect:/login";
-		}
-
-	}
 
 	/**
 	 * adds new user with such as incoming parameters into the database, but only in
@@ -78,7 +44,7 @@ public class UserController {
 	 * @return redirection to appropriate page
 	 */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String registration(ModelMap model, @RequestParam(required = false) String login,
+	public String registration(HttpServletRequest request, ModelMap model, @RequestParam(required = false) String login,
 			@RequestParam(required = false) String password1, @RequestParam String email) {
 
 		if (login != null && password1 != null) {
@@ -87,25 +53,11 @@ public class UserController {
 				model.put("msg", "such user already exists");
 				return "redirect:/registrations";
 			}
-
+			// adding new user into database and calling auto authentication method
 			userRepository.addUser(new User(login, password1, "user", email, "unconfirmed"));
-			User newUser = userRepository.getUserByName(login);
-			model.put("userId", newUser.getId());
-			model.put("role", newUser.getRole());
-			model.put("name", newUser.getName());
+			authWithHttpServletRequest(request, login, password1);
 
-			switch (newUser.getRole()) {
-			case "user":
-				return "redirect:/userHome";
-			case "admin":
-				return "redirect:/adminHome";
-
-			case "manager":
-				return "redirect:/managerHome";
-			default:
-				return "redirect:/login";
-
-			}
+			return "redirect:/userHome";
 		} else {
 			return "redirect:/login";
 		}
@@ -123,14 +75,9 @@ public class UserController {
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public Model getUsers(Model model, ModelMap modelMap) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			List<User> userList = userRepository.getUsers();
-			model.addAttribute("listUsers", userList);
-			return model;
-		} else {
-			return model;
-		}
+		List<User> userList = userRepository.getUsers();
+		model.addAttribute("listUsers", userList);
+		return model;
 	}
 
 	/**
@@ -176,20 +123,30 @@ public class UserController {
 	public String addUser(@RequestParam String login, @RequestParam(required = true) String email,
 			@RequestParam(required = true) String password1, @RequestParam String setRole, ModelMap modelMap) {
 
-		String role = (String) modelMap.get("role");
-		if ("admin".equals(role)) {
-			User user = new User();
-			user.setName(login);
-			user.setEmail(email);
-			user.setPassword(password1);
-			user.setRole(setRole);
-			user.setStatus("confirmed");
-			userRepository.addUser(user);
+		User user = new User();
+		user.setName(login);
+		user.setEmail(email);
+		user.setPassword(password1);
+		user.setRole(setRole);
+		user.setStatus("confirmed");
+		userRepository.addUser(user);
 
-			return "redirect:/adminHome";
-		} else {
-			return "redirect:/home";
-		}
+		return "redirect:/adminHome";
 	}
 
+	/**
+	 * This method is used for auto authentication after successful registration
+	 * process
+	 * 
+	 * @param request  incoming request
+	 * @param username user's name
+	 * @param password user's password
+	 */
+	public void authWithHttpServletRequest(HttpServletRequest request, String username, String password) {
+		try {
+			request.login(username, password);
+		} catch (ServletException e) {
+			System.out.println("Wasn't able to autologin successfully " + e);
+		}
+	}
 }

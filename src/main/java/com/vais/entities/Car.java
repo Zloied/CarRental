@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -31,8 +30,8 @@ public class Car implements Serializable {
 	public static final String ATTRIBUTE_COST = "cost";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
-	@SequenceGenerator(name = "car_seq", sequenceName = "car_rental.cars_id_seq", allocationSize = 10)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@SequenceGenerator(name = "car_seq", sequenceName = "car_rental.cars_id_seq", allocationSize = 10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

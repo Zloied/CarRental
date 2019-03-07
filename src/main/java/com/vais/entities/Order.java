@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
@@ -49,8 +48,8 @@ public class Order implements Serializable {
 	public static final String ATTRIBUTE_END_DATE = "end_date";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
-	@SequenceGenerator(name = "order_seq", sequenceName = "car_rental.orders_id_seq", allocationSize =10)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@SequenceGenerator(name = "order_seq", sequenceName = "car_rental.orders_id_seq", allocationSize =10)
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 

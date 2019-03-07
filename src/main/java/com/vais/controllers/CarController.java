@@ -1,6 +1,11 @@
 package com.vais.controllers;
 
+import java.security.Principal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.vais.entities.Car;
 import com.vais.repositories.CarRepository;
+import com.vais.utils.UserDetail;
 
 /**
  * 
@@ -40,14 +46,8 @@ public class CarController {
 	@RequestMapping(value = "/cars", method = RequestMethod.GET)
 	public Model getCars(Model model, ModelMap modelMap) {
 
-		String role = (String) modelMap.get("role");
-		if ("user".equals(role) || "manager".equals(role)) {
-			model.addAttribute("CARS_LIST", carRepository.getCars());
-			return model;
-		} else {
-			return model;
-		}
-
+		model.addAttribute("CARS_LIST", carRepository.getCars());
+		return model;
 	}
 
 	/**
@@ -61,14 +61,15 @@ public class CarController {
 	 * @return redirect link
 	 */
 	@RequestMapping(value = "/cars/{carId}", method = RequestMethod.GET)
-	public String getCar(ModelMap modelMap, Model model, @PathVariable Long carId) {
+	public String getCar(Principal principal, Model model, @PathVariable Long carId) {
 
-		String role = (String) modelMap.get("role");
-		System.out.println(role);
+		UserDetail loginedUser = (UserDetail) ((Authentication) principal).getPrincipal();
+		List<GrantedAuthority> authorities = (List<GrantedAuthority>) loginedUser.getAuthorities();
+		String role = authorities.get(0).getAuthority();
 		model.addAttribute("theCar", carRepository.getCar(carId));
-		if ("user".equals(role)) {
+		if ("ROLE_USER".equals(role)) {
 			return "redirect:/userViewCar";
-		} else if ("manager".equals(role)) {
+		} else if ("ROLE_MANAGER".equals(role)) {
 			return "redirect:/managerCarChange";
 		} else {
 			return "redirect:/home";
@@ -91,20 +92,14 @@ public class CarController {
 	@RequestMapping(value = "/cars/{carId}", method = RequestMethod.POST)
 	public String changeCar(@RequestParam String model, @RequestParam(required = false) String mark,
 			@RequestParam(required = false) String carClass,
-			@RequestParam(defaultValue = "0", required = false) int carCost, @PathVariable Long carId,
-			ModelMap modelMap) {
+			@RequestParam(defaultValue = "0", required = false) int carCost, @PathVariable Long carId) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			if ((mark != null) && (carClass != null) && (carCost != 0)) {
-				Car car = new Car(model, mark, carClass, carCost);
-				car.setId(carId);
-				carRepository.updateCar(car);
-			}
-			return "redirect:/managerCars";
-		} else {
-			return "redirect:/home";
+		if ((mark != null) && (carClass != null) && (carCost != 0)) {
+			Car car = new Car(model, mark, carClass, carCost);
+			car.setId(carId);
+			carRepository.updateCar(car);
 		}
+		return "redirect:/managerCars";
 	}
 
 	/**
@@ -123,17 +118,12 @@ public class CarController {
 	public String addCar(@RequestParam(required = false) String carName, @RequestParam(required = false) String mark,
 			@RequestParam(required = false) String carClass,
 			@RequestParam(defaultValue = "0", required = false) int carCost, ModelMap modelMap) {
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			if ((carName != null) && (mark != null) && (carClass != null) && (carCost != 0)) {
-				Car car = new Car(carName, mark, carClass, carCost);
-				carRepository.addCar(car);
-			}
-			return "redirect:/managerCars";
-		} else {
-			return "redirect:/home";
 
+		if ((carName != null) && (mark != null) && (carClass != null) && (carCost != 0)) {
+			Car car = new Car(carName, mark, carClass, carCost);
+			carRepository.addCar(car);
 		}
+		return "redirect:/managerCars";
 	}
 
 	/**
@@ -147,13 +137,7 @@ public class CarController {
 	@RequestMapping(value = "/cars/delete/{carId}")
 	public String deleteCar(@PathVariable Long carId, ModelMap modelMap) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			carRepository.deleteCar(carId);
-			return "redirect:/managerCars";
-		} else {
-			return "redirect:/home";
-
-		}
+		carRepository.deleteCar(carId);
+		return "redirect:/managerCars";
 	}
 }

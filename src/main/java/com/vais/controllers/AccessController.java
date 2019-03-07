@@ -1,8 +1,10 @@
 package com.vais.controllers;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import com.vais.models.OrderDaily;
 import com.vais.repositories.CarRepository;
 import com.vais.repositories.OrderRepository;
 import com.vais.repositories.UserRepository;
+import com.vais.utils.UserDetail;
 
 /**
  * this controller responsible for access to pages
@@ -35,6 +38,11 @@ public class AccessController {
 
 	@Autowired
 	private CarRepository carRepository;
+
+	@RequestMapping(value = "/403")
+	public String acessDenied() {
+		return "accessDenied";
+	}
 
 	@RequestMapping(value = { "/home", "/" })
 	public String showHomePage(ModelMap model) {
@@ -73,37 +81,21 @@ public class AccessController {
 	@RequestMapping(value = "/adminHome")
 	public String adminAccess(ModelMap model) {
 
-		String role = (String) model.get("role");
-		if ("admin".equals(role)) {
-			List<User> userList = userRepository.getUsers();
-			model.addAttribute("listUsers", userList);
-			return "adminHome";
-		} else {
-			return "redirect:/home";
-		}
-
+		List<User> userList = userRepository.getUsers();
+		model.addAttribute("listUsers", userList);
+		return "adminHome";
 	}
 
 	@RequestMapping(value = "/adminAdd")
 	public String goAdminAdd(ModelMap model) {
 
-		String role = (String) model.get("role");
-		if ("admin".equals(role)) {
-			return "adminAdd";
-		} else {
-			return "redirect:/home";
-		}
+		return "adminAdd";
 	}
 
 	@RequestMapping(value = "/managerHome")
 	public String goManagerHome(ModelMap modelMap) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			return "managerHome";
-		} else {
-			return "redirect:/home";
-		}
+		return "managerHome";
 	}
 
 	@RequestMapping(value = "/manager/statistics")
@@ -116,117 +108,65 @@ public class AccessController {
 	@RequestMapping(value = "/managerCars")
 	public String goManagerCars(Model model, ModelMap modelMap) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			List<Car> cars = carRepository.getCars();
-			model.addAttribute("CARS_LIST", cars);
-			return "managerCars";
-		} else {
-			return "redirect:/home";
-		}
+		List<Car> cars = carRepository.getCars();
+		model.addAttribute("CARS_LIST", cars);
+		return "managerCars";
 	}
 
 	@RequestMapping(value = "/managerCarsStat")
 	public String goManagerCarsStatistic(Model model, ModelMap modelMap) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			List<CarStatistic> carsStat = carRepository.getCarsStatistic();
-			model.addAttribute("CARS_STAT", carsStat);
-			return "managerCarsStat";
-		} else {
-			return "redirect:/home";
-		}
-
+		List<CarStatistic> carsStat = carRepository.getCarsStatistic();
+		model.addAttribute("CARS_STAT", carsStat);
+		return "managerCarsStat";
 	}
 
 	@RequestMapping(value = "/managerCarChange")
 	public String goManagerCarChange(ModelMap modelMap) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			return "managerCarChange";
-		} else {
-			return "redirect:/home";
-		}
+		return "managerCarChange";
 	}
 
 	@RequestMapping(value = "/managerOrders")
 	public String goManagerOrders(ModelMap modelMap, Model model) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			List<Order> orders = orderRepository.getOrders();
-			model.addAttribute("listOrders", orders);
-			return "managerOrders";
-		} else {
-			return "redirect:/home";
-		}
-
+		List<Order> orders = orderRepository.getOrders();
+		model.addAttribute("listOrders", orders);
+		return "managerOrders";
 	}
 
 	@RequestMapping(value = "/managerReports")
 	public String goManagerReports(ModelMap modelMap, Model model) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			List<OrderDaily> orders = orderRepository.getOrderReports();
-			model.addAttribute("listOrderReports", orders);
-			return "managerOrdersReports";
-		} else {
-			return "redirect:/home";
-		}
+		List<OrderDaily> orders = orderRepository.getOrderReports();
+		model.addAttribute("listOrderReports", orders);
+		return "managerOrdersReports";
 	}
 
 	@RequestMapping(value = "/userView")
-	public String userViewOrders(ModelMap modelMap, Model model) {
-		String role = (String) modelMap.get("role");
+	public String userViewOrders(Model model, Principal principal) {
 
-		if ("user".equals(role)) {
-			Long userId = (Long) modelMap.get("userId");
-			List<Order> orders = orderRepository.getOrdersByUser(userId);
-			model.addAttribute("listOrders", orders);
-			return "userView";
-		} else {
-			return "redirect:/home";
-		}
-
+		UserDetail loginedUser = (UserDetail) ((Authentication) principal).getPrincipal();
+		List<Order> orders = orderRepository.getOrdersByUser(loginedUser.getUserId());
+		model.addAttribute("listOrders", orders);
+		return "userView";
 	}
 
 	@RequestMapping(value = "/userHome")
-	public String userHome(ModelMap model) {
-
-		String role = (String) model.get("role");
-		if ("user".equals(role)) {
-			return "userHome";
-		} else {
-			return "redirect:/home";
-		}
+	public String userHome(ModelMap model, Principal principal) {
+		return "userHome";
 	}
 
 	@RequestMapping(value = "/userFeedback")
 	public String userFeedback(ModelMap model) {
-
-		String role = (String) model.get("role");
-		if ("user".equals(role)) {
-			return "userFeedback";
-		} else {
-			return "redirect:/home";
-		}
+		return "userFeedback";
 	}
 
 	@RequestMapping(value = "/userNewOrder")
 	public String userMakeNewOrder(ModelMap modelMap, Model model) {
 
-		String role = (String) modelMap.get("role");
-		if ("user".equals(role)) {
-
-			List<Car> cars = carRepository.getCars();
-			model.addAttribute("CARS_LIST", cars);
-			return "userNewOrder";
-		} else {
-			return "redirect:/home";
-		}
-
+		List<Car> cars = carRepository.getCars();
+		model.addAttribute("CARS_LIST", cars);
+		return "userNewOrder";
 	}
 }

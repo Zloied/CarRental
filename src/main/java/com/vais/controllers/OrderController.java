@@ -1,5 +1,6 @@
 package com.vais.controllers;
 
+import java.security.Principal;
 import java.sql.Date;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -10,15 +11,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.vais.entities.Order;
 import com.vais.repositories.CarRepository;
 import com.vais.repositories.OrderRepository;
+import com.vais.utils.UserDetail;
 
 /**
  * 
@@ -28,7 +31,6 @@ import com.vais.repositories.OrderRepository;
  */
 @Controller
 @Transactional
-@SessionAttributes({ "userId", "role" })
 public class OrderController {
 
 	@Autowired
@@ -50,9 +52,11 @@ public class OrderController {
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	@RequestMapping(value = "/orders", method = RequestMethod.POST)
-	public String addOrder(ModelMap model, @RequestParam(required = false) Long carId[],
+	public String addOrder(Principal principal, @RequestParam(required = false) Long carId[],
 			@RequestParam(required = false) String driver, @RequestParam(required = true) Date startDate,
 			@RequestParam(required = true) Date endDate) {
+
+		UserDetail loginedUser = (UserDetail) ((Authentication) principal).getPrincipal();
 		if (carId != null && (driver != null)) {
 			List<Long> carsId = new ArrayList<Long>();
 			for (Long long1 : carId) {
@@ -64,7 +68,7 @@ public class OrderController {
 			order.setStart_date(startDate);
 			order.setFinish_date(endDate);
 			order.setStatus("requested");
-			order.setUserId((Long) model.get("userId"));
+			order.setUserId(loginedUser.getUserId());
 
 			// Getting and checking number of days, there should be at least 1 day
 			long days = ChronoUnit.DAYS.between(startDate.toLocalDate(), endDate.toLocalDate());
@@ -99,13 +103,15 @@ public class OrderController {
 	 * @return spring Model
 	 */
 	@RequestMapping(value = "/orders", method = RequestMethod.GET)
-	public Model getOrders(ModelMap modelMap, Model model) {
+	public Model getOrders(Principal principal, Model model) {
 
-		String role = (String) modelMap.get("role");
-		if ("user".equals(role)) {
-			model.addAttribute("listOrders", orderRepository.getOrdersByUser((Long) modelMap.get("userId")));
+		UserDetail loginedUser = (UserDetail) ((Authentication) principal).getPrincipal();
+		List<GrantedAuthority> authorities = (List<GrantedAuthority>) loginedUser.getAuthorities();
+		String role = authorities.get(0).getAuthority();
+		if ("ROLE_USER".equals(role)) {
+			model.addAttribute("listOrders", orderRepository.getOrdersByUser(loginedUser.getUserId()));
 			return model;
-		} else if ("manager".equals(role)) {
+		} else if ("ROLE_MANAGER".equals(role)) {
 			model.addAttribute("listOrders", orderRepository.getOrders());
 			return model;
 		} else {
@@ -122,12 +128,15 @@ public class OrderController {
 	 * @return redirect link
 	 */
 	@RequestMapping(value = "/orders/{orderId}", method = RequestMethod.GET)
-	public String getOrder(Model model, ModelMap modelMap, @PathVariable Long orderId) {
-		String role = (String) modelMap.get("role");
-		if ("user".equals(role)) {
+	public String getOrder(Model model, Principal principal, @PathVariable Long orderId) {
+
+		UserDetail loginedUser = (UserDetail) ((Authentication) principal).getPrincipal();
+		List<GrantedAuthority> authorities = (List<GrantedAuthority>) loginedUser.getAuthorities();
+		String role = authorities.get(0).getAuthority();
+		if ("ROLE_USER".equals(role)) {
 			model.addAttribute("Order", orderRepository.getOrder(orderId));
 			return "userViewOrder";
-		} else if ("manager".equals(role)) {
+		} else if ("ROLE_MANAGER".equals(role)) {
 			model.addAttribute("Order", orderRepository.getOrder(orderId));
 			return "managerViewOrder";
 		} else {
@@ -148,15 +157,9 @@ public class OrderController {
 	public String setOrderStatus(ModelMap modelMap, @PathVariable Long orderId,
 			@RequestParam(required = false) String setStatus) {
 
-		String role = (String) modelMap.get("role");
-		if ("manager".equals(role)) {
-			if (setStatus != null) {
-				orderRepository.updateOrderStatus(orderId, setStatus);
-			}
-			return "redirect:/managerOrders";
-		} else {
-			return "redirect:/home";
+		if (setStatus != null) {
+			orderRepository.updateOrderStatus(orderId, setStatus);
 		}
-
+		return "redirect:/managerOrders";
 	}
 }
