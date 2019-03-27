@@ -16,7 +16,12 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import com.vais.repositories.UserRepository;
 import com.vais.security.RentalSimpleUrlAuthenticationSucessHandler;
 import com.vais.service.UserDetailsServiceImpl;
-
+/**
+ * 
+ * @author Eduard
+ *
+ *this is custom implementation of spring security. 
+ */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -42,7 +47,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationSuccessHandler getAuthenticationSuccessHandler() {
 		return new RentalSimpleUrlAuthenticationSucessHandler();
 	}
-
+	
+	/**
+	 * configuring URL pages and required parameters to access them. Setting up
+	 * authentication handler on successful authentication.
+	 */
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 
@@ -73,7 +82,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.passwordParameter("passw").and().logout().logoutUrl("/logOut").logoutSuccessUrl("/home");
 
 	}
-
+	/**
+	 * Storing access tokins in memory
+	 * @return and instance of implementation of PersistenTokenRopository
+	 */
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {
 		InMemoryTokenRepositoryImpl memory = new InMemoryTokenRepositoryImpl();

@@ -15,6 +15,13 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+/**
+ * 
+ * @author Eduard
+ *
+ *         This is utility class for spring security. This class handles
+ *         redirection after authentication based on user's role .
+ */
 public class RentalSimpleUrlAuthenticationSucessHandler implements AuthenticationSuccessHandler {
 
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
@@ -38,6 +45,12 @@ public class RentalSimpleUrlAuthenticationSucessHandler implements Authenticatio
 		redirectStrategy.sendRedirect(request, response, targetUrl);
 	}
 
+	/**
+	 * this method determines and returns URL for redirection based on user's role .
+	 * 
+	 * @param authentication incoming Authentication token
+	 * @return target URL
+	 */
 	protected String determineTargetUrl(Authentication authentication) {
 		boolean isUser = false;
 		boolean isManager = false;

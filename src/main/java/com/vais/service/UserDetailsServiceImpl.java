@@ -15,7 +15,14 @@ import org.springframework.stereotype.Service;
 import com.vais.entities.User;
 import com.vais.repositories.UserRepository;
 import com.vais.utils.UserDetail;
-
+/**
+ * 
+ * @author Eduard
+ *	
+ * This class implements spring's UserDatailService ,
+ *  which retrieves user from the database and returns required for spring security informations about user. 
+ *  Such as encrypted password, user's name, GrantedAuthority and user's ID
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
